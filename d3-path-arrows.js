@@ -11,7 +11,7 @@ function pathArrows () {
   function appendArrows (selection) {
     let totalDashArrayLength = arrowLength + gapLength
 
-    arrows = selection
+    let arrows = selection
       .append('path')
       .attr('d', path)
       .style('stroke-width', 1)
