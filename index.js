@@ -175,12 +175,17 @@ var margin = { top: 30, right: 30, bottom: 30, left: 30};
         return d.source.name + " → " + d.target.name + "\n Index: " + (d.index);
       });
 
+		let arrows = pathArrows()
+    	.arrowLength(10)
+  		.gapLength(150)
+    	.arrowHeadSize(4)
+    	.path(function(link){ return link.path })
 
 		 var arrowsG = linkG.data(sankeyLinks)
       .enter()
       .append("g")
       .attr("class", "g-arrow")
-      .call(appendArrows, 20, 300, 4)
+      .call(arrows)
 
     function highlightNodes(node, name) {
 
