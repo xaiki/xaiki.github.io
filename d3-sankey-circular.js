@@ -169,7 +169,7 @@
       // 3.  Determine how the circular links will be drawn,
       //     either travelling back above the main chart ("top")
       //     or below the main chart ("bottom")
-      selectCircularLinkTypes(graph)
+      
 
       // 4. Calculate the nodes' values, based on the values of the incoming and outgoing links
       computeNodeValues(graph)
@@ -180,6 +180,8 @@
       //     - column: the depth (0, 1, 2, etc), as is relates to visual position from left to right
       //     - x0, x1: the x coordinates, as is relates to visual position from left to right
       computeNodeDepths(graph)
+      
+      selectCircularLinkTypes(graph)
 
       // 6.  Calculate the nodes' and links' vertical position within their respective column
       //     Also readjusts sankey size if circular links are needed, and node x's
@@ -553,6 +555,7 @@
           })
         })
       }
+      
 
       // For each column, check if nodes are overlapping, and if so, shift up/down
       function resolveCollisions () {
@@ -655,15 +658,30 @@
   function selectCircularLinkTypes (graph) {
     let numberOfTops = 0
     let numberOfBottoms = 0
+    
+    
+    let maxColumn = d3.max(graph.nodes, function (node) {
+        return node.column
+      })
+    
     graph.links.forEach(function (link) {
+      let updateNode = true;
       if (link.circular) {
         // if either souce or target has type already use that
-        if (link.source.circularLinkType || link.target.circularLinkType) {
+        if (link.source.column == maxColumn && link.target.column == 0) {
+          console.log(numberOfTops);
+          link.circularLinkType = numberOfTops <= numberOfBottoms
+            ? 'top'
+            : 'bottom';
+          updateNode = false
+          
+        } else if (link.source.circularLinkType || link.target.circularLinkType) {
           // default to source type if available
           link.circularLinkType = link.source.circularLinkType
             ? link.source.circularLinkType
             : link.target.circularLinkType
-        } else {
+        } else 
+        {
           link.circularLinkType = numberOfTops < numberOfBottoms
             ? 'top'
             : 'bottom'
@@ -675,11 +693,16 @@
           numberOfBottoms = numberOfBottoms + 1
         }
 
-        graph.nodes.forEach(function (node) {
+        if (updateNode) {
+          
+          graph.nodes.forEach(function (node) {
           if (node.name == link.source.name || node.name == link.target.name) {
             node.circularLinkType = link.circularLinkType
           }
         })
+          
+        }
+        
       }
     })
 
@@ -893,7 +916,7 @@
           }
         } else {
           // else calculate normally
-          // add left extent coordinates, based on links with same source column and circularLink type
+          // add left extent coordinates, based on links with same source 'column' and circularLink type
           let thisColumn = link.source.column
           let thisCircularLinkType = link.circularLinkType
           let sameColumnLinks = graph.links.filter(function (l) {
