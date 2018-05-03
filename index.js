@@ -1,69 +1,27 @@
 let data = {
   "nodes": [
-    { "name": "startA" },
-    { "name": "startB" },
-    { "name": "process1" },
-    { "name": "process2" },
-    { "name": "process3" },
-    { "name": "process4" },
-    { "name": "process5" },
-    { "name": "process6" },
-    { "name": "process7" },
-    { "name": "process8" },
-    { "name": "process9" },
-    { "name": "process10" },
-    { "name": "process11" },
-    { "name": "process12" },
-    { "name": "process13" },
-    { "name": "process14" },
-    { "name": "process15" },
-    { "name": "process16" },
-    { "name": "finishA" },
-    { "name": "finishB" }
+    { "name": "bt" },
+    { "name": "pb" },
+    { "name": "end" },
+    { "name": "pg" },
+    { "name": "sd" },
+    { "name": "s" }
   ],
-  "links": [
-    { "source": "startA", "target": "process8", "value": 20, "optimal": "yes" },
-    { "source": "startA", "target": "process5", "value": 20, "optimal": "yes" },
-    { "source": "startA", "target": "process6", "value": 20, "optimal": "yes" },
-    { "source": "startB", "target": "process1", "value": 15, "optimal": "yes" },
-    { "source": "startB", "target": "process5", "value": 15, "optimal": "yes" },
-    { "source": "process1", "target": "process4", "value": 30, "optimal": "yes" },
-    { "source": "process4", "target": "process1", "value": 10, "optimal": "yes" },
-    { "source": "process2", "target": "process7", "value": 35, "optimal": "yes" },
-    { "source": "process1", "target": "process3", "value": 20, "optimal": "yes" },
-    { "source": "process5", "target": "process1", "value": 20, "optimal": "yes" },
-    { "source": "process6", "target": "startA", "value": 5, "optimal": "yes" },
-    { "source": "process4", "target": "process2", "value": 5, "optimal": "yes" },
-    { "source": "process6", "target": "process8", "value": 15, "optimal": "yes" },
-    { "source": "process4", "target": "startB", "value": 5, "optimal": "yes" },
-    { "source": "process3", "target": "process2", "value": 15, "optimal": "yes" },
-    { "source": "process3", "target": "startB", "value": 5, "optimal": "yes" },
-    { "source": "process15", "target": "process13", "value": 10, "optimal": "yes" },
-    { "source": "process13", "target": "process9", "value": 10, "optimal": "yes" },
-    { "source": "process7", "target": "startB", "value": 20, "optimal": "yes" },
-    { "source": "process8", "target": "process1", "value": 10, "optimal": "yes" },
-     { "source": "process8", "target": "process16", "value": 10, "optimal": "yes" },
-    { "source": "process16", "target": "process9", "value": 10, "optimal": "yes" },
-    { "source": "process8", "target": "process11", "value": 25, "optimal": "yes" },
-    { "source": "process11", "target": "process10", "value": 20, "optimal": "yes" },
-    { "source": "process4", "target": "process12", "value": 10, "optimal": "yes" },
-    { "source": "process12", "target": "process11", "value": 10, "optimal": "yes" },
-    { "source": "process7", "target": "process15", "value": 15, "optimal": "yes" },
-    { "source": "process15", "target": "process14", "value": 10, "optimal": "yes" },
-    { "source": "process10", "target": "process13", "value": 10, "optimal": "yes" },
-    { "source": "process10", "target": "process16", "value": 10, "optimal": "yes" },
-    { "source": "process14", "target": "finishB", "value": 10, "optimal": "yes" },
-    { "source": "process9", "target": "finishA", "value": 10, "optimal": "yes" },
-    { "source": "process16", "target": "process8", "value": 10, "optimal": "yes" },
-    { "source": "process9", "target": "finishB", "value": 10, "optimal": "yes" },
-    { "source": "process15", "target": "finishB", "value": 10, "optimal": "yes" },
-    { "source": "process15", "target": "finishA", "value": 10, "optimal": "yes" },
-    { "source": "process11", "target": "process15", "value": 25, "optimal": "yes" }
-  ]
+  "links": [{"source":"bt","target":"pb","value":129689},
+            {"source":"bt","target":"end","value":128495},
+            {"source":"bt","target":"s","value":67366},
+            {"source":"bt","target":"pg","value":58121},
+            {"source":"s","target":"bt","value":111715},
+            {"source":"pb","target":"end","value":157660},
+            {"source":"pb","target":"bt","value":157660},
+            {"source":"s","target":"end","value":53594,},
+            {"source":"s","target":"sd","value":53594},
+            {"source":"pg","target":"end","value":53594},
+            {"source":"pg","target":"bt","value":53594}]
 };
 
 var margin = { top: 30, right: 30, bottom: 30, left: 30};
-    var width = 1100;
+    var width = 800;
     var height = 600;
 
     var sankey = d3.sankeyCircular()
