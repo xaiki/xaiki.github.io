@@ -166,21 +166,19 @@
       // 2.  Determine which links result in a circular path in the graph
       identifyCircles(graph)
 
-      // 3.  Determine how the circular links will be drawn,
-      //     either travelling back above the main chart ("top")
-      //     or below the main chart ("bottom")
-      
-
-      // 4. Calculate the nodes' values, based on the values of the incoming and outgoing links
+      // 3. Calculate the nodes' values, based on the values of the incoming and outgoing links
       computeNodeValues(graph)
 
-      // 5.  Calculate the nodes' depth based on the incoming and outgoing links
+      // 4.  Calculate the nodes' depth based on the incoming and outgoing links
       //     Sets the nodes':
       //     - depth:  the depth in the graph
       //     - column: the depth (0, 1, 2, etc), as is relates to visual position from left to right
       //     - x0, x1: the x coordinates, as is relates to visual position from left to right
       computeNodeDepths(graph)
       
+      // 5.  Determine how the circular links will be drawn,
+      //     either travelling back above the main chart ("top")
+      //     or below the main chart ("bottom")
       selectCircularLinkTypes(graph)
 
       // 6.  Calculate the nodes' and links' vertical position within their respective column
@@ -666,15 +664,16 @@
     
     graph.links.forEach(function (link) {
       let updateNode = true;
+      
       if (link.circular) {
-        // if either souce or target has type already use that
+        //if the link is from end column to the first
         if (link.source.column == maxColumn && link.target.column == 0) {
-          console.log(numberOfTops);
+
           link.circularLinkType = numberOfTops <= numberOfBottoms
             ? 'top'
             : 'bottom';
           updateNode = false
-          
+        // if either souce or target has type already use that
         } else if (link.source.circularLinkType || link.target.circularLinkType) {
           // default to source type if available
           link.circularLinkType = link.source.circularLinkType

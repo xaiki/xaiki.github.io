@@ -20,7 +20,7 @@ let data = {
             {"source":"pg","target":"end","value":53594},
             {"source":"pg","target":"bt","value":53594}]*/
   
-  "links": [{"source":"s","target":"s","value":16879,"id":"start_search_0","control":true},{"source":"sd","target":"s","value":22305,"id":"suggestionDetails_search_0","control":true},{"source":"bt","target":"s","value":22305,"id":"browseTitles_search_0","control":true},{"source":"pb","target":"s","value":16879,"id":"playback_search_0","control":true},{"source":"s","target":"sd","value":3804,"id":"search_suggestionDetails_0","control":true},{"source":"s","target":"sd","value":2886,"id":"start_suggestionDetails_0","control":true},{"source":"pb","target":"bt","value":19207,"id":"playback_browseTitles_0","control":true},{"source":"s","target":"bt","value":16393,"id":"search_browseTitles_0","control":true},{"source":"start","target":"bt","value":19207,"id":"start_browseTitles_0","control":true},{"source":"pg","target":"bt","value":12442,"id":"profilesGate_browseTitles_0","control":true},{"source":"start","target":"pb","value":3107,"id":"start_playback_0","control":true},{"source":"bt","target":"pb","value":3107,"id":"browseTitles_playback_0","control":true},{"source":"bt","target":"pg","value":401,"id":"browseTitles_profilesGate_0","control":true}]
+  "links": [{"source":"s","target":"s","value":16879,"id":"start_search_0","control":true},{"source":"sd","target":"s","value":22305,"id":"suggestionDetails_search_0","control":true},{"source":"bt","target":"s","value":22305,"id":"browseTitles_search_0","control":true},{"source":"pb","target":"s","value":16879,"id":"playback_search_0","control":true},{"source":"s","target":"sd","value":6690,"id":"start_suggestionDetails_0","control":true},{"source":"pb","target":"bt","value":19207,"id":"playback_browseTitles_0","control":true},{"source":"s","target":"bt","value":16393,"id":"search_browseTitles_0","control":true},{"source":"start","target":"bt","value":19207,"id":"start_browseTitles_0","control":true},{"source":"pg","target":"bt","value":12442,"id":"profilesGate_browseTitles_0","control":true},{"source":"start","target":"pb","value":3107,"id":"start_playback_0","control":true},{"source":"bt","target":"pb","value":3107,"id":"browseTitles_playback_0","control":true},{"source":"bt","target":"pg","value":401,"id":"browseTitles_profilesGate_0","control":true}]
 };
 
 var margin = { top: 30, right: 30, bottom: 30, left: 30};
@@ -29,10 +29,8 @@ var margin = { top: 30, right: 30, bottom: 30, left: 30};
 
     var sankey = d3.sankeyCircular()
       .nodeWidth(10)
-      //.nodePadding(0) //note that this will be overridden by nodePaddingRatio
-      .nodePaddingRatio(0.7)
+      .nodePaddingRatio(0.8)
       .size([width, height])
-      //.extent([[0,-1013],[900,860.9568044591637]])
     	.nodeId(function (d) {
         return d.name;
       })
