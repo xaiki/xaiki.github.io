@@ -438,7 +438,7 @@
         })
 
       initializeNodeBreadth()
-      resolveCollisions()
+      //resolveCollisions()
 
       for (var alpha = 1, n = iterations; n > 0; --n) {
         relaxLeftAndRight((alpha *= 0.99))
@@ -481,7 +481,10 @@
         columns.forEach(function (nodes) {
           var nodesLength = nodes.length
           nodes.forEach(function (node, i) {
-            if (node.partOfCycle) {
+            if (node.depth == 3 && nodesLength == 1) {
+                node.y0 = y1 / 2 - (node.value * ky)
+                node.y1 = node.y0 + node.value * ky
+            } else if (node.partOfCycle) {
               if (numberOfNonSelfLinkingCycles(node) == 0) {
                 node.y0 = y1 / 2 + i
                 node.y1 = node.y0 + node.value * ky
@@ -508,24 +511,28 @@
         let columnsLength = columns.length
 
         columns.forEach(function (nodes, i) {
+                    
           let n = nodes.length
-          let depth = nodes[0].depth
-
+          let depth = nodes[0].depth;
+          
           nodes.forEach(function (node) {
+            console.log(node.name);
+            console.log(depth + " " + (columnsLength-1));
             // check the node is not an orphan
             if (node.sourceLinks.length || node.targetLinks.length) {
-              if (node.partOfCycle && numberOfNonSelfLinkingCycles(node) > 0) {
+              
+              if (depth == 0 && n == 1) {
+                let nodeHeight = node.y1 - node.y0
+                node.y0 = y1 / 2 - nodeHeight / 2
+                node.y1 = y1 / 2 + nodeHeight / 2
+              } else if (depth == (columnsLength - 1) && n == 1) {
+                console.log("s here")
+                
+                let nodeHeight = node.y1 - node.y0
+                node.y0 = y1 / 2 - nodeHeight / 2
+                node.y1 = y1 / 2 + nodeHeight / 2
+              } else if (node.partOfCycle && numberOfNonSelfLinkingCycles(node) > 0) {
                 // console.log(node.name + " " + node.y0)
-              } else if (depth == 0 && n == 1) {
-                let nodeHeight = node.y1 - node.y0
-
-                node.y0 = y1 / 2 - nodeHeight / 2
-                node.y1 = y1 / 2 + nodeHeight / 2
-              } else if (depth == columnsLength - 1 && n == 1) {
-                let nodeHeight = node.y1 - node.y0
-
-                node.y0 = y1 / 2 - nodeHeight / 2
-                node.y1 = y1 / 2 + nodeHeight / 2
               } else {
                 let avg = 0
 
@@ -558,7 +565,11 @@
       // For each column, check if nodes are overlapping, and if so, shift up/down
       function resolveCollisions () {
         columns.forEach(function (nodes) {
-          var node, dy, y = y0, n = nodes.length, i
+          
+          if (nodes.length == 1) { 
+            return 
+          } else {
+            var node, dy, y = y0, n = nodes.length, i
 
           // Push any overlapping nodes down.
           nodes.sort(ascendingBreadth)
@@ -587,6 +598,8 @@
               y = node.y0
             }
           }
+          }
+          
         })
       }
     }
@@ -1299,12 +1312,7 @@
               let linkY0AtColumn = py_t - (link.width / 2)
               let linkY1AtColumn = py_t + (link.width / 2)
 
-              if (node.name == "process14") {
-                console.log(node.name)
-                console.log(node.y0 + " " + node.y1)
-                console.log(link.index)
-                console.log(linkY0AtColumn + " " + linkY1AtColumn)
-              }
+              
 
               // If top of link overlaps node, push node up
               if (linkY0AtColumn > node.y0 && linkY0AtColumn < node.y1) {
