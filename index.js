@@ -29,7 +29,7 @@ var margin = { top: 30, right: 30, bottom: 30, left: 30};
 
     var sankey = d3.sankeyCircular()
       .nodeWidth(10)
-      .nodePaddingRatio(0.8)
+      .nodePaddingRatio(0.7)
       .size([width, height])
     	.nodeId(function (d) {
         return d.name;
