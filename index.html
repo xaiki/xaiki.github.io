@@ -1,41 +1,47 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+  <head>
 
-  
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100i" rel="stylesheet">
-  <script src="https://d3js.org/d3.v4.min.js"></script>
 
-  <title>Sankey with circular links</title>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-    }
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100i" rel="stylesheet">
+    <link href="range.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    rect {
-      shape-rendering: crispEdges;
-    }
+    <title>Sankey with circular links</title>
+    <style>
+     body {
+         font-family: 'Roboto', sans-serif;
+     }
 
-    text {
-      font-size: 12px;
-      font-family: monospace;
-    }
+     rect {
+         shape-rendering: crispEdges;
+     }
 
-    .link {
-      fill: none;
-    }
-  </style>
-</head>
+     text {
+         font-size: 12px;
+         font-family: monospace;
+     }
 
-<body>
+     .link {
+         fill: none;
+     }
+    </style>
+  </head>
 
-  <h1>Sankey with circular links</h1>
+  <body>
 
-  <div id="chart"></div>
+    <h1>Sankey with circular links</h1>
 
-  <script src="d3-sankey-circular.js"></script>
+    <div>
+      <div id="sliders">
+    </div>
+
+    <div id="chart"></div>
+
+    <script src="d3-sankey-circular.js"></script>
   <script src="d3-path-arrows.js"></script>
+  <script src="range.js"></script>
   <script src="index.js"></script>
   
 </body>

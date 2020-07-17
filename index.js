@@ -1,3 +1,10 @@
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 const buildData = () => {
   const links = [
     {source: "Anses", target: "Beneficiario", value: 10000},
@@ -6,7 +13,7 @@ const buildData = () => {
     {source: "Beneficiario", target: "Comercios Afiliado", value: 3000},
     {source: "Beneficiario", target: "Comercios no Afiliado", value: 2000},
     {source: "Beneficiario", target: "Banco", value: 2000},
-    /*
+    /*  
        {source: "Beneficiario 2", target: "Servicios", value: 3000},
        {source: "Beneficiario 2", target: "Comercios Afiliado", value: 3000},
        {source: "Beneficiario 2", target: "Comercios no Afiliado", value: 2000},
@@ -17,13 +24,13 @@ const buildData = () => {
     
     {source: "Comercios no Afiliado", target: "Proveedores Minoritarios", value: 1000},
     {source: "Comercios no Afiliado", target: "Banco", value: 1000},
-
+    
     {source: "Proveedores Minoritarios", target: "Proveedores Mayoritarios", value: 2000},
     {source: "Proveedores Minoritarios", target: "Servicios Publicos", value: 1000},
-
+    
     {source: "Proveedores Mayoritarios", target: "Servicios Publicos", value: 1000},
     {source: "Proveedores Mayoritarios", target: "Banco", value: 2000},
-
+    
     {source: "Banco", target: "Proveedores Mayoritarios", value: 1000},
     {source: "Banco", target: "Anses", value: 5000},
 
@@ -32,8 +39,8 @@ const buildData = () => {
   const nodes = Array.from(
     new Set(
       links.flatMap(l => [l.source, l.target])),
-    name => ({name, category: name.replace(/ .*/, "")}));
-
+    name => ({name, category: name.replace(/ .*/, ""), id: uuidv4()}));
+  
   return {nodes, links, units: "IFD"};
 }
 
@@ -47,7 +54,7 @@ var sankey = d3.sankeyCircular()
                .nodeWidth(10)
                .nodePaddingRatio(0.7)
                .size([width, height])
-	         .nodeId(function (d) {
+    	         .nodeId(function (d) {
                  return d.name;
                })
                .nodeAlign(d3.sankeyJustify)
@@ -74,20 +81,17 @@ var nodeG = g.append("g")
              .selectAll("g");
 
 //run the Sankey + circular over the data
-let sankeyData = sankey(data);
-let sankeyNodes = sankeyData.nodes;
-let sankeyLinks = sankeyData.links;
+const {nodes, links} = sankey(data)
 
-console.log(sankeyLinks);
-
-let depthExtent = d3.extent(sankeyNodes, function (d) { return d.depth; });
+let depthExtent = d3.extent(nodes, function (d) { return d.depth; });
 
 var nodeColour = d3.scaleSequential(d3.interpolateCool)
                    .domain([0,width]);
 
-var node = nodeG.data(sankeyNodes)
+var node = nodeG.data(nodes)
                 .enter()
-                .append("g");
+                .append("g")
+                .attr("id", function(d) { return d.id });
 
 node.append("rect")
     .attr("x", function (d) { return d.x0; })
@@ -99,6 +103,7 @@ node.append("rect")
     .on("mouseover", function (d) {
 
       let thisName = d.name;
+      console.error(d, this)
 
       node.selectAll("rect")
           .style("opacity", function (d) {
@@ -120,6 +125,30 @@ node.append("rect")
       d3.selectAll(".sankey-link").style("opacity", 0.7);
       d3.selectAll("text").style("opacity", 1);
     })
+    .on("click", function (d) {
+      const g = document.getElementById("sliders")
+      
+      if (g.configTooltip) {
+        g.configTooltip.remove();
+        g.configTooltip = null;
+      }
+
+      const s = makeSlider(d.sourceLinks.reduce((a, c, i) => [...a, {
+        name: c.target.name,
+        value: c.value + (i ? a[i - 1].value : 0),
+        update: (values) => {
+          d.sourceLinks.forEach(({index}, i) => links[index].value = values[i] )
+          
+        }
+      }], []), {
+        max: d.value,
+        formatValue: function(b) {
+          return `${this.name}: ${100*(parseFloat(this.value) - b)/d.value}%`
+        }
+      });
+      g.appendChild(s);
+      g.configTooltip = s;
+    })
 
 node.append("text")
     .attr("x", function (d) { return (d.x0 + d.x1) / 2; })
@@ -131,11 +160,11 @@ node.append("text")
 node.append("title")
     .text(function (d) { return d.name + "\n" + (d.value); });
 
-var link = linkG.data(sankeyLinks)
+var link = linkG.data(links)
                 .enter()
                 .append("g")
 
-link.append("path")
+link.append("path") 
                 .attr("class", "sankey-link")
                 .attr("d", function(link){
                   return link.path;
@@ -157,7 +186,7 @@ let arrows = pathArrows()
   .arrowHeadSize(4)
   .path(function(link){ return link.path })
 
-var arrowsG = linkG.data(sankeyLinks)
+var arrowsG = linkG.data(links)
                    .enter()
                    .append("g")
                    .attr("class", "g-arrow")
