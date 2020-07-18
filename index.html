@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
-
-  <head>
-
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100i" rel="stylesheet">
-    <link href="range.css" rel="stylesheet">
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <head>
+        <meta charset="utf-8" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100i" rel="stylesheet">
+        <link href="range.css" rel="stylesheet">
+        <link href="style.css" rel="stylesheet">
+        <script src="https://d3js.org/d3.v5.min.js"></script>
 
     <title>Sankey with circular links</title>
     <style>
@@ -33,12 +32,10 @@
 
     <h1>Sankey with circular links</h1>
 
-    <div>
-      <div id="sliders">
+    <div style="display:flex;flex-direction:column;">
+      <div id="sliders" style="flex:1;"></div>
+      <div id="chart" style="flex:2;"></div>
     </div>
-
-    <div id="chart"></div>
-
     <script src="d3-sankey-circular.js"></script>
   <script src="d3-path-arrows.js"></script>
   <script src="range.js"></script>

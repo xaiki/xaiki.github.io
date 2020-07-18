@@ -20,6 +20,9 @@ const makeSankey = ({nodes, links}) => sankey({
 const data = buildData(window.links)
 const {nodes, links} = makeSankey(data);
 
+const fontScale = d3.scaleLinear() .range([10, 25]);
+fontScale.domain(d3.extent(nodes, function(d) { return d.value }));
+
 const container = d3.select('#chart');
 const svg = container.append('svg')
                      .attr('viewBox', [0, 0, width, height]);
@@ -71,11 +74,18 @@ function onClick(d, data) {
     g.configTooltip = s;
 }
 
+function clearOpacity() {
+    d3.selectAll("rect").style("opacity", 0.5);
+    d3.selectAll(".sankey-link").style("opacity", 0.7);
+    d3.selectAll("text").style("opacity", 1);
+}
 
 function update(data) {
     function updateNodes(nodes) {
-        const rect = nodeG
-            .selectAll("rect")
+        const allNodes = nodeG
+            .selectAll("rect");
+        
+        allNodes
             .data(nodes)
             .join(
                 enter => enter.append("rect"),
@@ -87,12 +97,22 @@ function update(data) {
             .attr("height", d => d.y1 - d.y0)
             .attr("width", d => d.x1 - d.x0)
             .attr("fill", d => color(d.name))
-            .on("click", d => onClick(d, data));
+            .on("click", d => onClick(d, data))
+            .on("mouseover", d => {
+                let name = d.name
+                allNodes.style("opacity", d => highlightNodes(d, name))
+                d3.selectAll(".sankey-link")
+                            .style("opacity",
+                                   l => l.source.name === name || l.target.name === name ? 1 : 0.3)
+            })
+            .on("mouseout", clearOpacity)
         
 
-        rect.enter()
+        allNodes.enter()
             .append("title")
-            .text(d=> `${d.name}\n${format(d.value)}`);
+            .text(d=> `${d.name}\n${format(d.value)}`)
+            .style("fill", d => d3.rgb(color(d.name)).darker(1.4))
+        
     }
     function updateLinks(links) {
         const link = linkG
@@ -112,7 +132,9 @@ function update(data) {
         link.select('title')
               .text(d => `${d.source.name} → ${d.target.name}\n${format(d.value)}`);
 
-        const enter = link.enter().append('g');
+        const enter = link.enter()
+                          .append('g')
+                          .attr("class", "sankey-link");
         enter
             .append("path")
             .attr("d", d3.sankeyLinkHorizontal())
@@ -133,6 +155,8 @@ function update(data) {
             .attr("dy", "0.35em")
             .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
             .text(d => d.name)
+            .style("fill", d => d3.rgb(color(d.name)).darker(1.4))
+            .style("font-size", d => Math.floor(fontScale(d.value)) + "px")
     }
     
     updateNodes(data.nodes)

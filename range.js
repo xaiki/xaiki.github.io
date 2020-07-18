@@ -6,7 +6,6 @@ function getVals(e) {
     // Get slider values
     e.preventDefault()
 
-    console.error(e)
     const parent = this.parentNode;
     const slides = Array.from(parent.getElementsByTagName("input"));
     if (e.target === slides[slides.length - 1]) {
@@ -15,6 +14,7 @@ function getVals(e) {
     }
 
     const values = [];
+    const formatedValues = [];
     for (i = 0; i < slides.length - 1; i++) {
         const s = slides[i];
         const v = parseFloat(s.value);
@@ -26,12 +26,17 @@ function getVals(e) {
             if (b && (v <= b)) return s.value = b + parseFloat(s.step);
             if (v >= a) return s.value = a - parseFloat(s.step);
         }
-        values.push(s.formatValue(b));
+        formatedValues.push(s.formatValue(b));
+        values.push(v - b)
     }
     const last = slides.pop();
-    values.push(last.formatValue(parseFloat(slides.pop().value)));
+    const lastValue = parseFloat(slides.pop().value)
+    formatedValues.push(last.formatValue(lastValue));
+    values.push(e.target.max - lastValue)
 
-    if (e.target.updateVals) e.target.updateVals(values);
+    if (e.target.updateVals) e.target.updateVals(formatedValues);
+    if (e.target.update) e.target.update(values);
+    
     parent.data = values;
 }
 
@@ -59,7 +64,6 @@ function makeSlider(
         sliders.push({value: config.max})
     }
 
-    console.error(sliders)
     const s = sliders.map(function(s, i) {
         const e = document.createElement('input');
         
