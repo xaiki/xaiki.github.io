@@ -1,0 +1,30 @@
+body {
+  font-family: sans-serif;
+}
+
+#container {
+    height: 300px;
+    width: 100%;
+}
+
+.node rect {
+  fill-opacity: .9;
+  shape-rendering: crispEdges;
+}
+
+.node text {
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .16;
+  transition-property: stroke-opacity;
+  transition-duration: 0.5s;
+}
+
+.link:hover {
+  stroke-opacity: .5;
+}
