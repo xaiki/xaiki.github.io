@@ -7,7 +7,7 @@
         <link href="style.css" rel="stylesheet">
         <script src="https://d3js.org/d3.v5.min.js"></script>
 
-    <title>Sankey with circular links</title>
+    <title>Modelación PCD</title>
     <style>
      body {
          font-family: 'Roboto', sans-serif;
@@ -25,21 +25,27 @@
      .link {
          fill: none;
      }
+     .content {
+         height: 100%;
+     }
     </style>
   </head>
 
   <body>
 
-    <h1>Sankey with circular links</h1>
+      <h1>Circulación del PCD</h1>
 
-    <div style="display:flex;flex-direction:column;">
-      <div id="sliders" style="flex:1;"></div>
+    <div style="display:flex;flex-direction:column;" class="content">
+      <div id="sliders" style="flex:0;"></div>
       <div id="chart" style="flex:2;"></div>
     </div>
+
+
     <script src="d3-sankey-circular.js"></script>
-  <script src="d3-path-arrows.js"></script>
-  <script src="range.js"></script>
-  <script src="index.js"></script>
+    <script src="d3-path-arrows.js"></script>
+    <script src="./data.js"></script>
+    <script src="range.js"></script>
+  <script src="sankey.js"></script>
   
 </body>
 
