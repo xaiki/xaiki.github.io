@@ -33,13 +33,19 @@
 
   <body>
 
-      <h1>Circulación del PCD</h1>
+      <h1>
+          Circulación del PCD
+          <span style="font-size: small;display: none;" id="gdocs_span">
+              no gdocs key detected:
+              <input id="gdocs_url" placeholder="Google Docs URL"/>
+          </span>
+      </h1>
 
-    <div style="display:flex;flex-direction:column;" class="content">
-      <div id="sliders" style="flex:0;"></div>
-      <div id="chart" style="flex:2;"></div>
-    </div>
-
+      <div style="display:flex;flex-direction:column;" class="content">
+          <div class="errors" style="color: red;flex:0;"></div>
+          <div id="sliders" style="flex:0;"></div>
+          <div id="chart" style="flex:2;"></div>
+      </div>
 
     <script src="d3-sankey-circular.js"></script>
     <script src="d3-path-arrows.js"></script>

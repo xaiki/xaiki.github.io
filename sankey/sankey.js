@@ -6,16 +6,50 @@ const NODE_BASE_OPACITY = 0.8;
 const NODE_BG_OPACITY = 0.5;
 const NODE_FG_OPACITY = 1;
 
-const uri = `https://docs.google.com/spreadsheets/d/e/${location.hash.slice(1)}/pub?output=csv`
-console.error(uri)
-d3.csv(uri)
-  .then(buildSankey)
+const container = d3.select('#chart');
+
+const log = d => { console.error(d); return d};
+const debounce = (delay = 200) => {
+    let timer = null;
+    return d => new Promise((accept, reject) => {
+        clearTimeout(timer)
+        timer = setTimeout(() => accept(d), delay)
+    })
+};
+const delay = debounce(200);
+
+const getDataAndSankey = (key) =>
+    Promise.resolve(key)
+           .then(key => `https://docs.google.com/spreadsheets/d/e/${key}/pub?output=csv`)
+           .then(delay)
+           .then(log)
+           .then(d3.csv)
+           .then(buildSankey)
+           .catch(e => {
+               d3.select(".errors").text(e)
+               container.selectAll("*").remove();
+           })
+
+new Promise((accept, reject) => {
+    const key = location.hash.slice(1)
+    if (key) return resolve(key)
+    return reject()
+
+}).then(getDataAndSankey)
+  .catch(e => {
+      const i = d3.select("#gdocs_span")
+                  .style("display", "block")
+                  .select("input")
+                  .on("input", (d) => {
+                      const {value} = i.nodes()[0]
+                      getDataAndSankey(value.replace("https://docs.google.com/spreadsheets/d/", "")
+                                            .replace(/\/.*/g, ''))
+                  });
+  })
 
 function buildSankey(linkData) {
     let {width, height} = document.querySelector('#chart').getClientRects()[0];
     width *= 2;
-
-    console.error(width, height)
 
     const color = d3.scaleOrdinal([
         ...d3.schemeCategory10,
@@ -53,7 +87,9 @@ function buildSankey(linkData) {
     const fontScale = d3.scaleLinear() .range([20, 40]);
     fontScale.domain(d3.extent(nodes, function(d) { return d.value }));
 
-    const container = d3.select('#chart');
+    container.selectAll("*").remove();
+    d3.select(".errors").text(null);
+    
     const svg = container.append('svg')
                          .attr('viewBox', [0, 0, width, height]);
 
