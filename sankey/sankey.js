@@ -11,9 +11,9 @@ const container = d3.select('#chart');
 const log = d => { console.error(d); return d};
 const debounce = (delay = 200) => {
     let timer = null;
-    return d => new Promise((accept, reject) => {
+    return d => new Promise((resolve, reject) => {
         clearTimeout(timer)
-        timer = setTimeout(() => accept(d), delay)
+        timer = setTimeout(() => resolve(d), delay)
     })
 };
 const delay = debounce(200);
@@ -22,7 +22,6 @@ const getDataAndSankey = (key) =>
     Promise.resolve(key)
            .then(key => `https://docs.google.com/spreadsheets/d/e/${key}/pub?output=csv`)
            .then(delay)
-           .then(log)
            .then(d3.csv)
            .then(buildSankey)
            .catch(e => {
@@ -30,7 +29,7 @@ const getDataAndSankey = (key) =>
                container.selectAll("*").remove();
            })
 
-new Promise((accept, reject) => {
+new Promise((resolve, reject) => {
     const key = location.hash.slice(1)
     if (key) return resolve(key)
     return reject()
@@ -42,8 +41,11 @@ new Promise((accept, reject) => {
                   .select("input")
                   .on("input", (d) => {
                       const {value} = i.nodes()[0]
-                      getDataAndSankey(value.replace("https://docs.google.com/spreadsheets/d/", "")
-                                            .replace(/\/.*/g, ''))
+                      getDataAndSankey(value
+                          .replace(/^\s+/g, '')
+                          .replace("https://docs.google.com/spreadsheets/d/e/", "")
+                          .replace("https://docs.google.com/spreadsheets/d/", "")
+                          .replace(/\/.*/g, ''))
                   });
   })
 
